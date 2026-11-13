@@ -79,6 +79,8 @@ h1 span { display: block; width: fit-content; background: linear-gradient(180deg
 .pin::after { content: ""; position: absolute; left: -4px; top: -4px; width: 8px; height: 8px; border-radius: 50%; background: #fff; }
 .pin span { position: absolute; left: 20px; top: -11px; font-size: 1rem; font-weight: 600; text-shadow: 0 1px 10px rgba(0, 0, 0, .8); }
 @keyframes ping { 0% { transform: scale(.6); opacity: 1; } 100% { transform: scale(1.8); opacity: 0; } }
+/* Atmosphere haze: thickens as the camera dives into Earth, and matches the top of the page */
+#haze { position: fixed; inset: 0; z-index: 0; pointer-events: none; opacity: 0; background: radial-gradient(ellipse at 50% 50%, #1a2766 0%, var(--karman) 70%); }
 #fade { position: fixed; inset: 0; z-index: 9; background: var(--space); opacity: 0; pointer-events: none; transition: opacity .38s ease; display: none; }
 
 /* ---------- Nav pill (dark glass by default, light glass in light mode) ---------- */
@@ -118,10 +120,10 @@ nav.hide { transform: translate(-50%, calc(-100% - 2rem - env(safe-area-inset-to
 .layer { position: relative; }
 /* Each layer paints its slice of the sky; together they form one gradient. Margins bleed it to the page edges. */
 .layer::before { content: ""; position: absolute; z-index: -1; inset: 0 calc(-1 * max(calc(var(--gut) + var(--rail)), env(safe-area-inset-right))) 0 calc(-1 * max(var(--gut), env(safe-area-inset-left))); background: var(--sky); }
-/* The intro starts see-through, so the Earth and stars carry on behind it with no edge */
-.l-intro { --sky: linear-gradient(rgba(4, 5, 11, 0) 0, rgba(4, 5, 11, .35) 22%, var(--space) 50%, var(--karman) 100%); }
+/* The intro starts see-through, so the landing carries on behind it with no edge */
+.l-intro { --sky: linear-gradient(rgba(12, 19, 54, 0) 0, var(--karman) 45%, #111a48 100%); }
 .l-intro::after { -webkit-mask-image: linear-gradient(transparent 30%, #000 60%); mask-image: linear-gradient(transparent 30%, #000 60%); }
-.l-about { --sky: linear-gradient(var(--karman), var(--strato)); }
+.l-about { --sky: linear-gradient(#111a48, var(--strato)); }
 .l-work { --sky: linear-gradient(var(--strato), var(--dusk)); }
 .l-horizon { --sky: var(--hz); height: clamp(22rem, 62vh, 40rem); }
 .l-contact { --sky: var(--ct); color: var(--ct-ink); }

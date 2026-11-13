@@ -4,7 +4,7 @@
   var hero = document.querySelector('.hero'), cap = document.getElementById('cap'), pin = document.getElementById('pin');
   var still = matchMedia('(prefers-reduced-motion: reduce)').matches;
   var CS = ['rgb(255,228,176)', 'rgb(176,196,255)', 'rgb(150,124,255)', 'rgb(255,150,210)'], ALP = [.22, .4, .62, .9];
-  var FL = 0.46, BA = 0.5, ZM = 14, TL = -0.42, MSG = ['Scroll to travel to our solar system', 'The Milky Way, about 100,000 light-years across', 'Zooming in on the Orion Arm, 26,000 light-years from the center', 'Our solar system', 'Earth, our home, and its Moon', ''];
+  var FL = 0.46, BA = 0.5, ZM = 14, TL = -0.42, MSG = ['Scroll to travel to our solar system', 'The Milky Way, about 100,000 light-years across', 'Zooming in on the Orion Arm, 26,000 light-years from the center', 'Our solar system', 'Earth, our home, and its Moon', 'Coming in to land in Pakistan'];
   var PL = [[.1, '#b9b9b9', 2.4, 'Mercury'], [.17, '#e8c98a', 3.8, 'Venus'], [.24, '#5aa2ff', 4.2, 'Earth, home'], [.33, '#e0643c', 3.2, 'Mars'], [.55, '#d9a066', 9, 'Jupiter'], [.7, '#e6d29a', 7, 'Saturn'], [.84, '#8fe3e8', 5, 'Uranus'], [.97, '#5c78ff', 5, 'Neptune']];
   var W, H, dpr, R, cx, cy, small, B, BR, DU, ST, WA = new Float32Array(110), WD = new Float32Array(110), BL, neb, S = {}, SUN0 = [0, 0];
   var EX = 0, EY = 0, SX = 0, SY = 0, EZ = 0, PZ = 0, rE = 0, zE = 1, Ecx = 0, Ecy = 0, gl, glc = document.getElementById('earth'), glP, glU = {}, glState = 0, shoot = null, nextShoot = 4000, mx = 0, my = 0, px = 0, py = 0, scrollT = 0, scrollS = 0, wv = 0, Q = 1, cur = -1, rt;
@@ -149,12 +149,13 @@ void main(){
     }
     if (Math.sin(ma) < 0 && mal > .001) body(1, mxp, myp, rM, 0, .1, mal);
     var rb = -1.22 + t * .00006, dr = (-1.274 - rb) % 6.283185; if (dr > 3.1416) dr -= 6.283185; if (dr < -3.1416) dr += 6.283185;
-    body(0, Ecx, Ecy, rE * Math.pow(5, PZ), rb + dr * PZ, .41 + .175 * PZ, ea * (1 - .4 * PZ));
+    if (dr < 1.2) dr += 6.283185; /* always spin eastward into the landing, about one turn */
+    body(0, Ecx, Ecy, rE * Math.pow(11, PZ * PZ), rb + dr * PZ, .41 + .175 * PZ, ea);
     if (Math.sin(ma) >= 0 && mal > .001) body(1, mxp, myp, rM, 0, .1, mal);
   }
   function ui(sp, ez, pz) {
     hero.style.opacity = 1 - sstep(.02, .2, sp); pin.style.opacity = sstep(.85, 1, pz); hero.style.transform = small ? 'translateY(' + (-sstep(.02, .2, sp) * innerHeight * .14).toFixed(1) + 'px)' : 'scale(' + (1 + sp * 2.5).toFixed(3) + ')';
-    var s = scrollY > scrollM * .86 ? 5 : ez > .5 ? 4 : sp < .1 ? 0 : sp < .45 ? 1 : sp < .72 ? 2 : 3;
+    var s = pz > .25 ? 5 : ez > .5 ? 4 : sp < .1 ? 0 : sp < .45 ? 1 : sp < .72 ? 2 : 3;
     if (s !== cur) { cur = s; cap.style.opacity = 0; clearTimeout(rt); rt = setTimeout(function () { cap.textContent = MSG[s]; cap.style.opacity = 1; }, 300); }
   }
   function draw(t) {
@@ -162,8 +163,8 @@ void main(){
     px += (mx - px) * .04; py += (my - py) * .04; scrollS += (scrollT - scrollS) * (still ? 1 : .07);
     wv = still ? 0 : wv + (Math.abs(scrollS - prev) * 40 - wv) * .15;
     var us = Math.min(1, scrollS / .58), ss = sstep(.55, .85, us), ga = 1 - sstep(.3, .62, us), zp = sstep(0, .62, us), z = Math.pow(ZM, zp), zs = Math.pow(z, .8);
-    EZ = sstep(0, 1, Math.min(1, Math.max(0, (scrollS - .52) / .32))); PZ = 0; sGeom(t); /* no Pakistan zoom: Earth stays face-on and scrolls away with the page */
-    var r0 = 4.2 * dpr, Rt = small ? W * .27 : Math.min(W, H) * .28; rE = r0 * Math.pow(Rt / r0, EZ); zE = rE / r0; Ecx = EX + (W / 2 - EX) * EZ; Ecy = EY + (H / 2 - EY) * EZ - Math.max(0, scrollY - scrollM * .84) * dpr;
+    EZ = sstep(0, 1, Math.min(1, Math.max(0, (scrollS - .52) / .32))); PZ = sstep(0, 1, Math.max(0, (scrollS - .8) / .2)); sGeom(t); if (haze) haze.style.opacity = Math.pow(PZ, 1.7).toFixed(3);
+    var r0 = 4.2 * dpr, Rt = small ? W * .27 : Math.min(W, H) * .28; rE = r0 * Math.pow(Rt / r0, EZ); zE = rE / r0; Ecx = EX + (W / 2 - EX) * EZ; Ecy = EY + (H / 2 - EY) * EZ;
     ctx.setTransform(1, 0, 0, 1, 0, 0); ctx.globalCompositeOperation = 'source-over'; ctx.globalAlpha = 1; ctx.clearRect(0, 0, W, H);
     var nz = 1 + zp * .6; ctx.drawImage(neb, (W - W * nz) / 2 - px * 10 * dpr, (H - H * nz) / 2 - py * 8 * dpr, W * nz, H * nz);
     ctx.globalCompositeOperation = 'lighter';
@@ -216,10 +217,10 @@ void main(){
     if (slow > 40 && Q > .4) { Q -= .15; slow = 0; }
     if (!covered) draw(t); requestAnimationFrame(loop);
   }
-  var siteTop = 0, scrollM = 0, covered = false, galEl = document.getElementById('galaxy');
+  var siteTop = 0, scrollM = 0, covered = false, galEl = document.getElementById('galaxy'), haze = document.getElementById('haze');
   function measure() { siteTop = document.querySelector('.site').offsetTop; scrollM = document.querySelector('.scroller').offsetHeight - innerHeight; }
   function setCovered(c) { if (c === covered) return; covered = c; var v = c ? 'hidden' : 'visible'; galEl.style.visibility = v; glc.style.visibility = v; hero.style.visibility = v; pin.style.visibility = v; cap.style.visibility = v; }
-  function onScroll() { if (!scrollM) measure(); scrollT = scrollM > 0 ? Math.min(1, scrollY / scrollM) : 0; setCovered(scrollY >= siteTop + innerHeight * .7); if (still && !covered) draw(0); }
+  function onScroll() { if (!scrollM) measure(); scrollT = scrollM > 0 ? Math.min(1, scrollY / scrollM) : 0; setCovered(scrollY >= siteTop - 2); if (still && !covered) draw(0); }
   var rz, lw = innerWidth, lh = innerHeight; addEventListener('resize', function () { clearTimeout(rz); rz = setTimeout(function () { if (innerWidth === lw && Math.abs(innerHeight - lh) < 200) { measure(); onScroll(); return; } lw = innerWidth; lh = innerHeight; build(); measure(); onScroll(); if (still && !covered) draw(0); }, 150); });
   addEventListener('scroll', onScroll, { passive: true });
   var snapping = false;
