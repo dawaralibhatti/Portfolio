@@ -112,13 +112,15 @@ nav.hide { transform: translate(-50%, calc(-100% - 2rem - env(safe-area-inset-to
 }
 
 /* ---------- The descent ---------- */
-.site { position: relative; z-index: 6; margin-top: -64vh; color: var(--ink); box-shadow: 0 -40px 80px rgba(0, 0, 0, .6); overflow-x: clip;
+.site { position: relative; z-index: 6; margin-top: -64vh; color: var(--ink); overflow-x: clip;
   padding-left: max(var(--gut), env(safe-area-inset-left)); padding-right: max(calc(var(--gut) + var(--rail)), env(safe-area-inset-right)); }
 .site ::selection { background: #b8b4ff; color: var(--space); }
 .layer { position: relative; }
 /* Each layer paints its slice of the sky; together they form one gradient. Margins bleed it to the page edges. */
 .layer::before { content: ""; position: absolute; z-index: -1; inset: 0 calc(-1 * max(calc(var(--gut) + var(--rail)), env(safe-area-inset-right))) 0 calc(-1 * max(var(--gut), env(safe-area-inset-left))); background: var(--sky); }
-.l-intro { --sky: linear-gradient(var(--space), var(--karman)); }
+/* The intro starts see-through, so the Earth and stars carry on behind it with no edge */
+.l-intro { --sky: linear-gradient(rgba(4, 5, 11, 0) 0, rgba(4, 5, 11, .35) 22%, var(--space) 50%, var(--karman) 100%); }
+.l-intro::after { -webkit-mask-image: linear-gradient(transparent 30%, #000 60%); mask-image: linear-gradient(transparent 30%, #000 60%); }
 .l-about { --sky: linear-gradient(var(--karman), var(--strato)); }
 .l-work { --sky: linear-gradient(var(--strato), var(--dusk)); }
 .l-horizon { --sky: var(--hz); height: clamp(22rem, 62vh, 40rem); }

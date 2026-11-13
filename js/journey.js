@@ -154,7 +154,7 @@ void main(){
   }
   function ui(sp, ez, pz) {
     hero.style.opacity = 1 - sstep(.02, .2, sp); pin.style.opacity = sstep(.85, 1, pz); hero.style.transform = small ? 'translateY(' + (-sstep(.02, .2, sp) * innerHeight * .14).toFixed(1) + 'px)' : 'scale(' + (1 + sp * 2.5).toFixed(3) + ')';
-    var s = pz > .3 ? 5 : ez > .5 ? 4 : sp < .1 ? 0 : sp < .45 ? 1 : sp < .72 ? 2 : 3;
+    var s = scrollY > scrollM * .86 ? 5 : ez > .5 ? 4 : sp < .1 ? 0 : sp < .45 ? 1 : sp < .72 ? 2 : 3;
     if (s !== cur) { cur = s; cap.style.opacity = 0; clearTimeout(rt); rt = setTimeout(function () { cap.textContent = MSG[s]; cap.style.opacity = 1; }, 300); }
   }
   function draw(t) {
@@ -162,8 +162,8 @@ void main(){
     px += (mx - px) * .04; py += (my - py) * .04; scrollS += (scrollT - scrollS) * (still ? 1 : .07);
     wv = still ? 0 : wv + (Math.abs(scrollS - prev) * 40 - wv) * .15;
     var us = Math.min(1, scrollS / .58), ss = sstep(.55, .85, us), ga = 1 - sstep(.3, .62, us), zp = sstep(0, .62, us), z = Math.pow(ZM, zp), zs = Math.pow(z, .8);
-    EZ = sstep(0, 1, Math.min(1, Math.max(0, (scrollS - .52) / .32))); PZ = sstep(0, 1, Math.max(0, (scrollS - .84) / .16)); sGeom(t);
-    var r0 = 4.2 * dpr, Rt = small ? W * .27 : Math.min(W, H) * .28; rE = r0 * Math.pow(Rt / r0, EZ); zE = rE / r0; Ecx = EX + (W / 2 - EX) * EZ; Ecy = EY + (H / 2 - EY) * EZ;
+    EZ = sstep(0, 1, Math.min(1, Math.max(0, (scrollS - .52) / .32))); PZ = 0; sGeom(t); /* no Pakistan zoom: Earth stays face-on and scrolls away with the page */
+    var r0 = 4.2 * dpr, Rt = small ? W * .27 : Math.min(W, H) * .28; rE = r0 * Math.pow(Rt / r0, EZ); zE = rE / r0; Ecx = EX + (W / 2 - EX) * EZ; Ecy = EY + (H / 2 - EY) * EZ - Math.max(0, scrollY - scrollM * .84) * dpr;
     ctx.setTransform(1, 0, 0, 1, 0, 0); ctx.globalCompositeOperation = 'source-over'; ctx.globalAlpha = 1; ctx.clearRect(0, 0, W, H);
     var nz = 1 + zp * .6; ctx.drawImage(neb, (W - W * nz) / 2 - px * 10 * dpr, (H - H * nz) / 2 - py * 8 * dpr, W * nz, H * nz);
     ctx.globalCompositeOperation = 'lighter';
@@ -219,7 +219,7 @@ void main(){
   var siteTop = 0, scrollM = 0, covered = false, galEl = document.getElementById('galaxy');
   function measure() { siteTop = document.querySelector('.site').offsetTop; scrollM = document.querySelector('.scroller').offsetHeight - innerHeight; }
   function setCovered(c) { if (c === covered) return; covered = c; var v = c ? 'hidden' : 'visible'; galEl.style.visibility = v; glc.style.visibility = v; hero.style.visibility = v; pin.style.visibility = v; cap.style.visibility = v; }
-  function onScroll() { if (!scrollM) measure(); scrollT = scrollM > 0 ? Math.min(1, scrollY / scrollM) : 0; setCovered(scrollY >= siteTop - 2); if (still && !covered) draw(0); }
+  function onScroll() { if (!scrollM) measure(); scrollT = scrollM > 0 ? Math.min(1, scrollY / scrollM) : 0; setCovered(scrollY >= siteTop + innerHeight * .7); if (still && !covered) draw(0); }
   var rz, lw = innerWidth, lh = innerHeight; addEventListener('resize', function () { clearTimeout(rz); rz = setTimeout(function () { if (innerWidth === lw && Math.abs(innerHeight - lh) < 200) { measure(); onScroll(); return; } lw = innerWidth; lh = innerHeight; build(); measure(); onScroll(); if (still && !covered) draw(0); }, 150); });
   addEventListener('scroll', onScroll, { passive: true });
   var snapping = false;
