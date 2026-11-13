@@ -2,7 +2,7 @@
 
 Source for **dawar.dev**, the personal portfolio of Dawar Ali Bhatti.
 
-The page is one descent: it starts in the Milky Way, zooms down to Earth and Pakistan, then drops through the atmosphere. The sky behind the content brightens from night to daylight as you scroll, and an altitude rail on the left counts down from 100 km to Rawalpindi at 508 m.
+The page is one descent: it starts in the Milky Way, zooms down to Earth and Pakistan, then drops through the atmosphere. The sky behind the content brightens from night to daylight as you scroll, and an altitude rail on the right counts down from 100 km to Rawalpindi at 508 m.
 
 ## Files
 
