@@ -3,6 +3,39 @@
    atmosphere to the ground in Rawalpindi. The sky behind the content
    brightens as you scroll, and the altitude rail on the right tracks it. */
 
+@font-face { font-family: "Bricolage Grotesque"; src: url("../fonts/bricolage-grotesque.woff2") format("woff2"); font-weight: 200 800; font-stretch: 75% 100%; font-style: normal; font-display: swap; }
+
+/* The sky at the bottom of the page follows the real time in Rawalpindi.
+   js/site.js sets data-sky on <html> to night, dawn, day or dusk. Dusk is the default. */
+:root, :root[data-sky="dusk"] {
+  --hz: linear-gradient(var(--dusk) 0%, #9a5c86 30%, #e08e80 58%, var(--horizon) 80%, #f7cfa6 100%);
+  --ct: linear-gradient(#f7cfa6, #f1dccb 55%, var(--day));
+  --ct-ink: #14203d; --ct-soft: rgba(20, 32, 61, .76); --ct-on: #f7e6d6;
+  --cloud: #fbd3c0; --cloud-o: .75;
+  --far: #9aa6c8; --mid: #4b4f7c; --near: #1b2340; --win: 0; --glow: 0;
+}
+:root[data-sky="dawn"] {
+  --hz: linear-gradient(var(--dusk) 0%, #7d6aa8 30%, #e7a6b0 60%, #f6c9a8 82%, #fde6c8 100%);
+  --ct: linear-gradient(#fde6c8, #e7eef3 60%, #d6e9f5);
+  --ct-ink: #1a2240; --ct-soft: rgba(26, 34, 64, .76); --ct-on: #fbf0e4;
+  --cloud: #fbe1e4; --cloud-o: .8;
+  --far: #b3b6d6; --mid: #5d628f; --near: #1d2545; --win: .35; --glow: 0;
+}
+:root[data-sky="day"] {
+  --hz: linear-gradient(var(--dusk) 0%, #5d6bb6 26%, #86ade2 56%, #b6d7f3 82%, #cfe6f7 100%);
+  --ct: linear-gradient(#cfe6f7, #e2f1fa 70%, #eaf5fb);
+  --ct-ink: #10233f; --ct-soft: rgba(16, 35, 63, .76); --ct-on: #eaf5fb;
+  --cloud: #ffffff; --cloud-o: .92;
+  --far: #9fb6d3; --mid: #4d6489; --near: #1a2a46; --win: 0; --glow: 0;
+}
+:root[data-sky="night"] {
+  --hz: linear-gradient(var(--dusk) 0%, #2c2b63 35%, #171c44 70%, #10153a 100%);
+  --ct: linear-gradient(#10153a, #151b45 70%, #1d1f4a);
+  --ct-ink: #f1f2fa; --ct-soft: rgba(225, 230, 255, .74); --ct-on: #10153a;
+  --cloud: #3a3f78; --cloud-o: .55;
+  --far: #2a2f62; --mid: #181d44; --near: #0b1028; --win: 1; --glow: 1;
+}
+
 :root {
   --space: #04050b;
   --karman: #0c1336;
@@ -35,7 +68,7 @@ body::after { content: ""; position: fixed; inset: 0; pointer-events: none; z-in
   background: radial-gradient(ellipse at 50% 50%, transparent 45%, rgba(2, 3, 8, .75) 100%); }
 .hero { position: fixed; inset: 0; display: flex; flex-direction: column; justify-content: center;
   padding: 0 clamp(1.5rem, 6vw, 5rem); z-index: 1; pointer-events: none; transform-origin: 30% 50%; will-change: opacity, transform; }
-h1 { margin: 0; font-weight: 700; font-stretch: 78%; font-size: clamp(3.4rem, 13vw, 11rem); line-height: .86; letter-spacing: -.035em; }
+h1 { margin: 0; font-weight: 700; font-stretch: 84%; font-size: clamp(3.4rem, 13vw, 11rem); line-height: .88; letter-spacing: -.012em; }
 h1 span { display: block; width: fit-content; background: linear-gradient(180deg, #fff 25%, #b8b4ff 115%);
   -webkit-background-clip: text; background-clip: text; color: transparent; filter: drop-shadow(0 0 28px rgba(140, 120, 255, .35)); }
 .scroller { height: 500vh; }
@@ -88,8 +121,8 @@ nav.hide { transform: translate(-50%, calc(-100% - 2rem - env(safe-area-inset-to
 .l-intro { --sky: linear-gradient(var(--space), var(--karman)); }
 .l-about { --sky: linear-gradient(var(--karman), var(--strato)); }
 .l-work { --sky: linear-gradient(var(--strato), var(--dusk)); }
-.l-horizon { --sky: linear-gradient(var(--dusk) 0%, #9a5c86 34%, #e08e80 62%, var(--horizon) 82%, #f7cfa6 100%); height: clamp(14rem, 34vh, 22rem); }
-.l-contact { --sky: linear-gradient(#f7cfa6, var(--day) 70%); color: var(--earth-ink); }
+.l-horizon { --sky: var(--hz); height: clamp(22rem, 62vh, 40rem); }
+.l-contact { --sky: var(--ct); color: var(--ct-ink); }
 /* Stars thin out as the air gets thicker */
 .l-intro::after, .l-about::after { content: ""; position: absolute; z-index: -1; pointer-events: none; inset: 0 calc(-1 * (var(--gut) + var(--rail))) 0 calc(-1 * var(--gut));
   background-image: radial-gradient(1px 1px at 12% 18%, #fff 50%, transparent 51%), radial-gradient(1px 1px at 37% 62%, #dfe6ff 50%, transparent 51%), radial-gradient(1.5px 1.5px at 71% 28%, #fff 50%, transparent 51%), radial-gradient(1px 1px at 88% 74%, #ffe6c8 50%, transparent 51%), radial-gradient(1px 1px at 54% 9%, #dfe6ff 50%, transparent 51%), radial-gradient(1px 1px at 23% 83%, #fff 50%, transparent 51%), radial-gradient(1.5px 1.5px at 93% 41%, #dfe6ff 50%, transparent 51%), radial-gradient(1px 1px at 6% 52%, #fff 50%, transparent 51%);
@@ -97,7 +130,7 @@ nav.hide { transform: translate(-50%, calc(-100% - 2rem - env(safe-area-inset-to
 .l-about::after { opacity: .2; -webkit-mask-image: linear-gradient(#000, transparent); mask-image: linear-gradient(#000, transparent); }
 
 /* Shared type */
-.site h2 { margin: 0; font-weight: 700; font-stretch: 78%; font-size: clamp(3rem, 9vw, 8.5rem); line-height: .9; letter-spacing: -.03em; }
+.site h2 { margin: 0; font-weight: 700; font-stretch: 86%; font-size: clamp(3rem, 8.4vw, 8rem); line-height: .94; letter-spacing: -.01em; }
 .site p { margin: 0 0 1em; font-size: clamp(1.05rem, 1.25vw, 1.2rem); line-height: 1.62; color: var(--ink-soft); max-width: 36em; }
 .site a { color: inherit; }
 
@@ -138,27 +171,32 @@ nav.hide { transform: translate(-50%, calc(-100% - 2rem - env(safe-area-inset-to
 .shot img { display: block; width: 100%; aspect-ratio: 900 / 535; object-fit: cover; object-position: top center; }
 .shot:hover { transform: translateY(-6px); box-shadow: 0 1px 0 rgba(255, 255, 255, .2) inset, 0 50px 100px -30px rgba(3, 4, 20, .95), 0 0 0 1px rgba(205, 212, 255, .3); }
 .shot:focus-visible { outline: 3px solid #b8b4ff; outline-offset: 5px; }
-.proj h3 { margin: 0 0 1rem; font-weight: 700; font-stretch: 80%; font-size: clamp(2.4rem, 5vw, 4.4rem); line-height: .95; letter-spacing: -.025em; }
+.proj h3 { margin: 0 0 1rem; font-weight: 700; font-stretch: 88%; font-size: clamp(2.4rem, 5vw, 4.4rem); line-height: .95; letter-spacing: -.008em; }
 .proj .built { font-size: .98rem; color: var(--ink-dim); }
 .open { display: inline-block; margin-top: .6rem; padding: .8rem 1.4rem; border-radius: 999px; background: var(--ink); color: var(--space) !important; text-decoration: none; font-weight: 600; font-size: 1rem; transition: background .25s, transform .25s; }
 .open:hover { background: #c9c4ff; transform: translateY(-2px); }
 .open:focus-visible { outline: 3px solid #c9c4ff; outline-offset: 3px; }
 
 /* Contact: 508 m, Rawalpindi */
-.cta { padding: clamp(3rem, 8vw, 6rem) 0 clamp(8rem, 16vw, 12rem); }
+.cta { padding: clamp(3rem, 8vw, 6rem) 0 clamp(5rem, 10vw, 8rem); }
 .cta h2 { max-width: 11ch; margin-bottom: 1.6rem; }
-.cta p { color: var(--earth-soft); }
+.cta p { color: var(--ct-soft); }
 .reach { display: flex; flex-wrap: wrap; align-items: center; gap: 1rem 1.4rem; margin-top: 2.2rem; }
-.mail { font-size: clamp(1.25rem, 3vw, 2.3rem); font-weight: 600; letter-spacing: -.01em; color: var(--earth-ink); text-decoration: underline; text-decoration-thickness: 2px; text-underline-offset: .22em; overflow-wrap: anywhere; }
+.mail { font-size: clamp(1.25rem, 3vw, 2.3rem); font-weight: 600; letter-spacing: -.01em; color: var(--ct-ink); text-decoration: underline; text-decoration-thickness: 2px; text-underline-offset: .22em; overflow-wrap: anywhere; }
 .mail:hover { text-decoration-thickness: 4px; }
-.mail:focus-visible, .copy:focus-visible { outline: 3px solid var(--earth-ink); outline-offset: 4px; border-radius: 4px; }
-.copy { font: inherit; font-size: 1rem; font-weight: 600; padding: .7rem 1.25rem; border-radius: 999px; border: 1.5px solid var(--earth-ink); background: transparent; color: var(--earth-ink); cursor: pointer; transition: background .2s, color .2s; }
-.copy:hover, .copy.done { background: var(--earth-ink); color: var(--day); }
+.mail:focus-visible, .copy:focus-visible { outline: 3px solid var(--ct-ink); outline-offset: 4px; border-radius: 4px; }
+.copy { font: inherit; font-size: 1rem; font-weight: 600; padding: .7rem 1.25rem; border-radius: 999px; border: 1.5px solid var(--ct-ink); background: transparent; color: var(--ct-ink); cursor: pointer; transition: background .2s, color .2s; }
+.copy:hover, .copy.done { background: var(--ct-ink); color: var(--ct-on); }
 
 /* Ground: the hills around Rawalpindi */
-.ground { position: relative; margin: 0 calc(-1 * max(calc(var(--gut) + var(--rail)), env(safe-area-inset-right))) 0 calc(-1 * max(var(--gut), env(safe-area-inset-left))); background: var(--day); }
-.ground svg { display: block; width: 100%; height: clamp(5rem, 12vw, 10rem); }
-.site footer { display: flex; flex-wrap: wrap; justify-content: space-between; align-items: center; gap: 1rem 2rem; background: var(--ground); color: rgba(225, 232, 255, .7);
+.ground { position: relative; margin: 0 calc(-1 * max(calc(var(--gut) + var(--rail)), env(safe-area-inset-right))) 0 calc(-1 * max(var(--gut), env(safe-area-inset-left))); }
+.ground svg.land { display: block; width: 100%; height: clamp(9rem, 17vw, 15rem); }
+.ground .far { fill: var(--far); } .ground .mid { fill: var(--mid); } .ground .near { fill: var(--near); }
+.ground .win { fill: #ffd27a; opacity: var(--win); transition: opacity 1s; }
+.ground .lamp { fill: #ffe7a8; opacity: var(--glow); }
+.ground .glow { opacity: calc(var(--glow) * .55); }
+.ground .mglow { opacity: var(--glow); }
+.site footer { display: flex; flex-wrap: wrap; justify-content: space-between; align-items: center; gap: 1rem 2rem; background: var(--near); color: rgba(225, 232, 255, .72);
   margin: 0 calc(-1 * max(calc(var(--gut) + var(--rail)), env(safe-area-inset-right))) 0 calc(-1 * max(var(--gut), env(safe-area-inset-left)));
   padding: 1.4rem max(calc(var(--gut) + var(--rail)), env(safe-area-inset-right)) calc(1.8rem + env(safe-area-inset-bottom, 0px)) max(var(--gut), env(safe-area-inset-left)); font-size: .98rem; }
 .site footer button { font: inherit; font-weight: 600; color: #fff; background: none; border: 0; padding: .4rem 0; cursor: pointer; text-decoration: underline; text-underline-offset: .2em; }
@@ -228,3 +266,51 @@ nav.hide { transform: translate(-50%, calc(-100% - 2rem - env(safe-area-inset-to
   .cur, .rkb, .rkf, .rka { animation: none !important; }
   .rkt, .shot, .alt { transition: none; }
 }
+
+/* ---------- Clouds (drift with scroll, see js/site.js) ---------- */
+.clouds { position: absolute; z-index: 0; pointer-events: none; overflow: hidden;
+  inset: 0 calc(-1 * max(calc(var(--gut) + var(--rail)), env(safe-area-inset-right))) 0 calc(-1 * max(var(--gut), env(safe-area-inset-left))); }
+.cloud { position: absolute; width: var(--w); aspect-ratio: 3 / 1; color: var(--cloud); opacity: var(--cloud-o); filter: blur(var(--b, 3px)); will-change: transform; }
+.cloud svg { display: block; width: 100%; height: 100%; fill: currentColor; }
+
+/* ---------- More projects ---------- */
+.more { margin-top: clamp(5rem, 11vw, 9rem); }
+.more h3 { margin: 0 0 1.6rem; font-weight: 700; font-stretch: 88%; font-size: clamp(2rem, 3.6vw, 3rem); line-height: 1; letter-spacing: -.005em; }
+.more ul { list-style: none; margin: 0; padding: 0; border-top: 1px solid rgba(205, 212, 255, .2); }
+.more li { display: grid; grid-template-columns: 13rem minmax(0, 1fr) 7.5rem; gap: .4rem 2rem; align-items: baseline; padding: 1.3rem 0; border-bottom: 1px solid rgba(205, 212, 255, .2); }
+.more li h4 { margin: 0; font-size: clamp(1.25rem, 1.8vw, 1.5rem); font-weight: 650; letter-spacing: -.01em; }
+.more li p { margin: 0; max-width: 40em; font-size: 1.02rem; }
+.more .status { font-size: .92rem; color: var(--ink-dim); white-space: nowrap; text-align: right; }
+.more .status.wip::before { content: ""; display: inline-block; width: 7px; height: 7px; margin-right: .45rem; border-radius: 50%; background: #9ef0b4; box-shadow: 0 0 8px #9ef0b4; vertical-align: .08em; }
+@media (max-width: 860px) { .more li { grid-template-columns: 1fr auto; } .more li p { grid-column: 1 / -1; grid-row: 2; } }
+
+/* ---------- Landing ---------- */
+.lander { position: absolute; z-index: 2; left: 30%; bottom: 22%; width: 64px; height: 92px; padding: 0; border: 0; background: none; cursor: pointer;
+  transform: translateY(-75vh); opacity: 0; }
+.lander:focus-visible { outline: 2px solid #fff; outline-offset: 6px; border-radius: 8px; }
+.lander .astro { position: absolute; left: 0; bottom: 0; width: 64px; height: 92px; filter: drop-shadow(0 0 10px rgba(184, 180, 255, .5)); }
+.lander .astro svg { display: block; overflow: visible; width: 100%; height: 100%; }
+.lander .rkf { opacity: 0; }
+.lander .rka { transform-origin: 56px 43px; transform: rotate(-12deg); }
+.lander .chute { position: absolute; left: 50%; bottom: 62px; width: 120px; margin-left: -60px; transform-origin: 50% 100%; transition: transform .5s ease, opacity .5s ease; }
+.lander .chute svg { display: block; width: 100%; }
+.lander .flag { position: absolute; left: 70px; bottom: 0; width: 46px; height: 74px; transform: scaleY(0); transform-origin: 50% 100%; transition: transform .7s cubic-bezier(.3, 1.4, .5, 1) .25s; }
+.lander .flag svg { display: block; width: 100%; height: 100%; overflow: visible; }
+.lander.falling { opacity: 1; animation: drop 2.6s cubic-bezier(.25, .6, .35, 1) forwards; }
+.lander.falling .astro { animation: sway 1.3s ease-in-out 2 alternate; }
+.lander.landed { opacity: 1; transform: none; }
+.lander.landed .chute { transform: scaleY(0) rotate(18deg); opacity: 0; }
+.lander.landed .flag { transform: scaleY(1); }
+.lander.landed .rka { animation: wave 1.7s ease-in-out .9s 1; }
+.lander.liftoff { opacity: 1; animation: liftoff 1.5s cubic-bezier(.55, 0, .8, .4) forwards; }
+.lander.liftoff .chute { opacity: 0; }
+.lander.liftoff .flag { transform: scaleY(1); transition: none; }
+.lander.liftoff .rkf { opacity: 1; animation: flick .12s ease-in-out infinite alternate; transform-box: fill-box; transform-origin: top center; }
+@keyframes drop { from { transform: translateY(-75vh); } to { transform: none; } }
+@keyframes sway { from { transform: rotate(-7deg); } to { transform: rotate(7deg); } }
+@keyframes liftoff { 0% { transform: none; } 12% { transform: translateY(6px); } 100% { transform: translateY(-130vh); } }
+.lander .tip { position: absolute; left: 50%; bottom: calc(100% + .6rem); transform: translateX(-50%); white-space: nowrap; font-size: .85rem; font-weight: 600; color: #fff; background: rgba(10, 12, 30, .7); padding: .3rem .6rem; border-radius: 6px; opacity: 0; transition: opacity .25s; pointer-events: none; }
+.lander.landed:hover .tip, .lander.landed:focus-visible .tip { opacity: 1; }
+body.landed .rkt { opacity: 0 !important; }
+@media (max-width: 600px) { .lander { left: 16%; scale: .8; transform-origin: 50% 100%; } }
+@media (prefers-reduced-motion: reduce) { .lander.falling, .lander.liftoff { animation: none; transform: none; } .lander.landed .rka, .lander.falling .astro { animation: none; } }
